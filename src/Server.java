@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class Server {
     private static final int PORT = 1809;
-    private static final int MAX_CLIENTS = 8;
+    private static final int MAX_CLIENTS = 2;
     private static int clients = 0;
     private static final Logger logger = Logger.getLogger(Server.class.getName());
     private static List<ClientHandler> clientHandlers = new ArrayList<>();
