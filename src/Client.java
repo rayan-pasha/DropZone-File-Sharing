@@ -2,19 +2,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
-    private static PrintWriter out;
+    private PrintWriter out;
     private String clientName;
     private JTextArea chatArea;
     private JTextField messageField;
+    private List<String> clientNames = new ArrayList<>();
 
     public Client() {
         // Loop until a non-blank username is entered
@@ -33,6 +34,9 @@ public class Client {
 
         chatArea = new JTextArea();
         chatArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(chatArea);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         messageField = new JTextField();
         JButton sendButton = new JButton("Send");
@@ -54,14 +58,11 @@ public class Client {
             }
         });
 
-        // Add KeyAdapter to handle Enter key press in the message field
-        messageField.addKeyListener(new KeyAdapter() {
+        messageField.addActionListener(new ActionListener() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    sendMessage(messageField.getText());
-                    messageField.setText("");
-                }
+            public void actionPerformed(ActionEvent e) {
+                sendMessage(messageField.getText());
+                messageField.setText("");
             }
         });
 
@@ -71,7 +72,7 @@ public class Client {
         buttonPanel.add(sendButton, BorderLayout.EAST);
         buttonPanel.add(exitButton, BorderLayout.WEST);
 
-        frame.add(chatArea, BorderLayout.CENTER);
+        frame.add(scrollPane, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);
@@ -83,13 +84,20 @@ public class Client {
             // Send the username to the server
             out.println(clientName);
 
+            // Add the client's name to the list of client names
+            clientNames.add(clientName);
+
             // Handle incoming messages in a separate thread
             Thread receiverThread = new Thread(() -> {
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     String message;
                     while ((message = in.readLine()) != null) {
-                        chatArea.append(message + "\n");
+                        if (message.startsWith("/CLIENTLIST/")) {
+                            updateClientList(message.substring(12)); // Assuming "/CLIENTLIST/" is used to send client names from the server
+                        } else {
+                            chatArea.append(message + "\n");
+                        }
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -102,11 +110,20 @@ public class Client {
         }
     }
 
-    private static void sendMessage(String message) {
+    private void updateClientList(String clients) {
+        String[] names = clients.split(",");
+        clientNames.clear();
+        for (String name : names) {
+            clientNames.add(name.trim());
+        }
+        // Do something with the updated client names list if needed
+    }
+
+    private void sendMessage(String message) {
         out.println(message);
     }
 
-    private static void sendExitMessage() {
+    private void sendExitMessage() {
         out.println("/EXIT/");  // Notify the server that the client is exiting
     }
 
@@ -114,4 +131,3 @@ public class Client {
         SwingUtilities.invokeLater(Client::new);
     }
 }
-

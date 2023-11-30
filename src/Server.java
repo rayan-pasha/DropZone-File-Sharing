@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.logging.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class Server {
     private static final int PORT = 1809;
@@ -121,7 +118,7 @@ class ServerGUI extends JFrame {
         setTitle("P2P Chat Server");
         setSize(300, 100);
 
-        connectedClientsLabel = new JLabel("Connected Clients: 0");
+        connectedClientsLabel = new JLabel("Connected Clients:");
 
         add(connectedClientsLabel, BorderLayout.CENTER);
 
