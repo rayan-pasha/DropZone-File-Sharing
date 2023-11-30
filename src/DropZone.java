@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.filechooser.FileSystemView;
 
-
 public class DropZone {
     private JFrame frame;
     private JPanel mainPanel;
@@ -14,11 +13,10 @@ public class DropZone {
     private JPanel currentPanel;
     private List<ChatRoom> chatRooms;
     private ServerGUI serverGUI;
-    private ClientGUI clientGUI;
+    private Client client;
     private List<File> uploadedFiles;
     private int fileCounter;
     private JPanel chatRoomsPanel;
-
 
     public static void main(String[] args) {
         try {
@@ -27,22 +25,18 @@ public class DropZone {
             e.printStackTrace();
         }
 
-
         SwingUtilities.invokeLater(() -> new DropZone().createAndShowGUI());
     }
-
 
     private void createAndShowGUI() {
         frame = new JFrame("DropZone - P2P Lobby");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
 
-
         mainPanel = createMainPanel();
         lobbyPanel = createLobbyPanel();
         chatRoomPanel = createChatRoomPanel();
         chatRooms = new ArrayList<>();
-
 
         CardLayout cardLayout = new CardLayout();
         currentPanel = new JPanel(cardLayout);
@@ -50,12 +44,10 @@ public class DropZone {
         currentPanel.add(lobbyPanel, "lobby");
         currentPanel.add(chatRoomPanel, "chat");
 
-
         frame.add(currentPanel);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
 
     private JPanel createMainPanel() {
         JPanel panel = new JPanel();
@@ -225,12 +217,10 @@ public class DropZone {
 
     private void switchToChatRoom(ChatRoom chatRoom) {
         serverGUI = new ServerGUI();
-        new Thread(() -> Server.main(new String[]{chatRoom.getRoomName()})).start(); // Start server in a new thread
+        new Thread(() -> Server.main(new String[]{chatRoom.getRoomName(), String.valueOf(serverGUI)})).start();
 
-
-        clientGUI = new ClientGUI();
-        new Thread(() -> Client.main(new String[]{chatRoom.getRoomName()})).start(); // Start client in a new thread
-
+        Client client = new Client();
+        new Thread(() -> client.main(new String[]{chatRoom.getRoomName()})).start();
 
         CardLayout cardLayout = (CardLayout) currentPanel.getLayout();
         cardLayout.show(currentPanel, "chat");
