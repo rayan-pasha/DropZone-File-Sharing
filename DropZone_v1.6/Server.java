@@ -20,6 +20,9 @@ public class Server {
     private static ServerGUI serverGUI;
 
     public static void main(String[] args) {
+
+        DB.init();
+
         SwingUtilities.invokeLater(() -> {
             serverGUI = new ServerGUI();
             serverGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,7 +88,7 @@ public class Server {
 
                     if ("/EXIT/".equalsIgnoreCase(line)) {
                         broadcastMessage(clientName + " has left the chat");
-                        break;
+
                     } else if ("/FILE/".equalsIgnoreCase(line)) {
                         handleFileUpload(in);
                     } else if ("/DOWNLOAD/".equalsIgnoreCase(line)) {
@@ -122,6 +125,12 @@ public class Server {
                 }
 
                 broadcastMessage(clientName + " has uploaded file: " + fileName);
+
+                DB.insertUpload(clientName, fileName);
+                DB.printUploadList();
+
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -183,6 +192,12 @@ public class Server {
                         bufferedInputStream.read(fileData, 0, fileData.length);
 
                         out.println(Base64.getEncoder().encodeToString(fileData));  // Send the file data to the client
+
+                        DB.insertDownload(clientName, fileName);
+
+
+                        DB.printDownloadList();
+
                     }
                 } else {
                     out.println("File not found: " + fileName);
