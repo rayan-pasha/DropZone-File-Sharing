@@ -15,7 +15,6 @@ public class DropZone {
     private List<ChatRoom> chatRooms;
     private ServerGUI serverGUI;
     private ClientGUI clientGUI;
-    private JPanel searchPanel;
     private List<File> uploadedFiles;
     private int fileCounter;
     private JPanel chatRoomsPanel;
@@ -91,13 +90,6 @@ public class DropZone {
 
         panel.add(titlePanel);
 
-
-        JTextField searchBar = new JTextField();
-        searchBar.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-        searchBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, searchBar.getPreferredSize().height));
-        panel.add(createSearchBarWithIcon(searchBar));
-
-
         uploadedFiles = new ArrayList<>();
         fileCounter = 1;
 
@@ -115,7 +107,6 @@ public class DropZone {
         });
 
 
-        searchBar.addActionListener(e -> filterFiles(searchBar.getText()));
         p2pButton.addActionListener(e -> switchToLobbyPanel());
         dropBoxButton.addActionListener(e -> switchToDropBox());
 
@@ -261,10 +252,7 @@ public class DropZone {
 
 
     private void showFileUploadPanel() {
-        // Clear the search panel
-        searchPanel.removeAll();
-        searchPanel.add(createGoBackButton());
-
+       
 
         // Create a file chooser for file uploads
         JFileChooser fileChooser = new JFileChooser();
@@ -275,19 +263,12 @@ public class DropZone {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             uploadedFiles.add(selectedFile);
-            addFileButton(selectedFile, fileCounter++, searchPanel);
         }
 
 
-        // Switch to the search panel for file uploads
-        switchToSearchPanel();
+     
     }
 
-
-    private void switchToSearchPanel() {
-        CardLayout cardLayout = (CardLayout) currentPanel.getLayout();
-        cardLayout.show(currentPanel, "search");
-    }
 
 
     private JButton createStyledButton(String text) {
@@ -360,27 +341,6 @@ public class DropZone {
     }
 
 
-    private JPanel createSearchBarWithIcon(JTextField searchBar) {
-        JPanel searchBarPanel = new JPanel();
-        searchBarPanel.setLayout(new BorderLayout());
-
-
-        ImageIcon searchIcon = new ImageIcon("path/to/search-icon.png");
-
-
-        JLabel searchIconLabel = new JLabel(searchIcon);
-        searchIconLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-
-
-        searchBarPanel.add(searchBar, BorderLayout.CENTER);
-        searchBarPanel.add(searchIconLabel, BorderLayout.WEST);
-
-
-        return searchBarPanel;
-    }
-
-
-
 
     private void downloadFile(File file) {
         JFileChooser fileChooser = new JFileChooser();
@@ -421,25 +381,7 @@ public class DropZone {
     }
 
 
-    private void filterFiles(String searchTerm) {
-        searchPanel.removeAll();
-        searchPanel.add(createGoBackButton());
-
-
-        int filteredFileCounter = 1;
-        for (File file : uploadedFiles) {
-            if (file.getName().toLowerCase().contains(searchTerm.toLowerCase())) {
-                addFileButton(file, filteredFileCounter++, searchPanel);
-            }
-        }
-
-
-        frame.setContentPane(searchPanel);
-        frame.revalidate();
-        frame.repaint();
-    }
-
-
+   
     class ChatRoom {
         private final String roomName;
 
