@@ -10,3 +10,9 @@ This repository contains the source code, test cases and instrtions on how to ex
 8. Run DropZoneServer
 9. Run DropZone as clients
 
+For PTP chatting, run the server file then run the client. The files will upload and downlaod on the server as well.
+Due to last mintute system intergration complexations, our lobby system is not working as expected, however the chatting funtionality still works. 
+To run and test the chatting funtionality do the following: 
+Server.java(run first)
+Client.java(multiple times)
+
