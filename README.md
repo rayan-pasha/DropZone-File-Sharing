@@ -10,3 +10,4 @@ This repository contains the source code, test cases and instrtions on how to ex
 8. Run DropZoneServer
 9. Run DropZone as clients
 
+For the PTP chatting run the server file then connect the users. The files will uploads and downlaods on the server as well.
