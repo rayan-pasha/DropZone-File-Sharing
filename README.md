@@ -1,18 +1,16 @@
-# Distributed Final Project - DropZone
-This repository contains the source code, test cases and instrtions on how to execute our distributed systems final project 
+# DropZone-File-Sharing 📁
 
-1. Clone Repository
-2. download wampserver64
-3. download MySQL Workbench
-4. open up phpMyAdmin and log in username: "root" Password:
-5. use database.sql text file and input code into sql query of wampserver64
-6. execute all commands  
-8. Run DropZoneServer
-9. Run DropZone as clients
+**DropZone** is a distributed file-sharing Java application with real-time private messaging.
 
-For PTP chatting, run the server file then run the client. The files will upload and downlaod on the server as well.
-Due to last mintute system intergration complexations, our lobby system is not working as expected, however the chatting funtionality still works. 
-To run and test the chatting funtionality do the following: 
-Server.java(run first)
-Client.java(multiple times)
+## 🚀 Features
 
+- **File Sharing**: Users can upload and download a variety of files, accessible to all clients.
+- **Private Messaging & File Transfer**: Users can create private chat sessions for private communication and file transfer.
+- **Audit Log**: Tracks user activity to enhance system security and transparency.
+  
+## 🛠️ Built With
+
+- **Java**: Core language for building the application.
+- **JFrame**: Provides a GUI for the application.
+- **Java Sockets**: Used to create the client/server architecture.
+- **MySQL**: Audits client activity within the application.
